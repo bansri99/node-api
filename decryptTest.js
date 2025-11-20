@@ -3,7 +3,7 @@ const { decrypt } = require("./encryption");
 
 
 // 🔹 Paste the encrypted text you received from Postman below
-const encryptedResponse = "ic9ZHkoIwSkt86KkYnx2Eg==:aKLBUWtNB5y56imM15IOZB4Y3cVvqw8J0xG4QHR1RR3mzg9vJb4itfECfw51Gi3VYwgIkPb3VlgqPm1qooI4T+Gu0u0Z9wJW/4JKDhiW+S3dfE6QOrZJUTK7ZRHymNbrOYRSH4pqD2aGvBOcGk4kBSFz8IpfOnRtIuhuk+dMpH4t50RvnSqDmSgM5Y0WdY3sSHRzz3gMnGvKuRazwgvjzt+Y0BTuie/DAGqwvWKps2dj/O3wbMXppkrrq034FbpTLjVYXn1q8OwO4U2hTv52u1xmeAGcmzCvSLBgHSE99Jpru9mc9Mx5euzQLshgokzQgoWhI4pLlMHbL7OCVhnvZQ==";
+const encryptedResponse = "/mRloQ+yhz1A0ZOriLBLpA==:TE0VzxejHekNL4zNHFwgN3onvsbAOHPl9HbyIgKWTDnkSG36zyrWT5IEXxWbVc6d6Hvoa9vrttlKFZu+4Z8KTl3CemAc2XNViQa194BggDXbzhg1F0dh7p75oPa/9nYq+ab9kX+KHIM0Xa+FscBPI5vh8wA02xmgc5ZyQ3frv4oI4LrSoBjvY9FqihPNJS8dA3sQ0pibeHAiU0qqSp4KIBQc45mASfQXdBKLPNmqtchnCdHlNKPZFNqQ1d6x6vrCi7ROW1Vz1fIKlNSaW49Zi1kvLgzz5VU7AoDcjwLQzK6vWk7bDiOWhO67dT3Ji0q/bzhRuhnls95ttxAvnSBG1A==";
 
 console.log("Decrypted data:");
 console.log(decrypt(encryptedResponse));
