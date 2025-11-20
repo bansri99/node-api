@@ -239,21 +239,46 @@ app.post("/api/users", authenticateToken, async (req, res) => {
 });
 
 
-// ✅ READ (GET all)
+// ✅ READ (GET all with pagination, sorting, filtering)
 app.get("/api/users", authenticateToken, (req, res) => {
-  db.query("SELECT * FROM users", (err, results) => {
-    if (err) return res.status(500).json({ error: err });
-    const encryptedResponse = encrypt(JSON.stringify(results));
+  try {
+    let { page = 1, limit = 10, sortBy = "id", order = "asc", search = "" } = req.query;
 
-    // ALSO show decrypted version for testing
-    const decryptedResponse = decrypt(encryptedResponse);
+    page = parseInt(page);
+    limit = parseInt(limit);
 
-    res.json({ 
-      "message": "Debug Mode: Encrypted + Decrypted data",
-      encrypted: encryptedResponse,
-      decrypted: JSON.parse(decryptedResponse) // plain text
+    const offset = (page - 1) * limit;
+
+    const searchPattern = `%${search}%`;
+
+    const sql = `
+      SELECT * FROM users
+      WHERE fname LIKE ? OR lname LIKE ? OR email LIKE ?
+      ORDER BY ${sortBy} ${order}
+      LIMIT ? OFFSET ?
+    `;
+
+    db.query(sql, [searchPattern, searchPattern, searchPattern, limit, offset], (err, results) => {
+      if (err) return res.status(500).json({ error: err });
+
+      const encryptedResponse = encrypt(JSON.stringify(results));
+      const decryptedResponse = decrypt(encryptedResponse);
+
+      res.json({
+        message: "Users fetched successfully",
+        pagination: {
+          page,
+          limit,
+          count: results.length
+        },
+        encrypted: encryptedResponse,
+        decrypted: JSON.parse(decryptedResponse)
+      });
     });
-  });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 
@@ -265,7 +290,7 @@ app.get("/api/users/:id", authenticateToken, (req, res) => {
     if (results.length === 0)
       return res.status(404).json({ message: "User not found" });
       const encryptedResponse = encrypt(JSON.stringify(results[0])); 
-      res.json({"message": "Read data", encrypted: encryptedResponse });
+      res.json({"message": "User fetched successfully", encrypted: encryptedResponse });
   });
 });
 
