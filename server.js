@@ -16,12 +16,31 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // ✅ MySQL Connection
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "nodeuser",
-  password: process.env.DB_PASSWORD,
-  database: "cruddb",
-});
+
+let db;
+
+// Detect if running on Clever Cloud 
+if (process.env.MYSQL_ADDON_HOST) {
+  console.log(" Using Clever Cloud MySQL");
+
+  db = mysql.createConnection({
+    host: process.env.MYSQL_ADDON_HOST,
+    user: process.env.MYSQL_ADDON_USER,
+    password: process.env.MYSQL_ADDON_PASSWORD,
+    database: process.env.MYSQL_ADDON_DB,
+    port: process.env.MYSQL_ADDON_PORT,
+  });
+} else {
+  console.log("Using Localhost MySQL");
+
+  db = mysql.createConnection({
+    host: "localhost",
+    user: "nodeuser",
+    password: process.env.DB_PASSWORD,
+    database: "cruddb",
+  });
+}
+
 
 db.connect((err) => {
   if (err) {
