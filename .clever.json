@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "app_id": "app_5219076c-5ec6-48b4-8bfc-93c2c00df4df",
+      "org_id": "user_442b6bc9-fcd0-4eb3-8434-8bd89331af3e",
+      "deploy_url": "https://github.com/bansri99/node-api.git",
+      "git_ssh_url": "https://github.com/bansri99/node-api.git",
+      "name": "node-api",
+      "alias": "node-api"
+    }
+  ]
+}
