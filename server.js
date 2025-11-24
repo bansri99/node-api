@@ -12,6 +12,12 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
+//Test API Clever Cloud
+app.get("/", (req, res) => {
+  res.send("API is running on Clever Cloud");
+});
+
 // Middleware
 app.use(express.json());
 
