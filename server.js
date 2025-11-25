@@ -170,11 +170,15 @@ app.post("/api/login", (req, res) => {
       return res.status(401).json({ message: "Invalid email or password." });
 
     // ✅ Generate token
-    const token = jwt.sign(
+   /* const token = jwt.sign(
       { id: user.id, email: user.email, username: user.username },process.env.JWT_SECRET,{ expiresIn: "1h" }
-    );
+    );*/
+    const payload = { id: user.id, email: user.email };
+    const token = jwt.sign(payload, JWT_SECRET);
+    const encrypted = encrypt(token);   // <-- gives you encrypted string
+    res.json({ token: encrypted });
 
-    // 🧩 Encrypt response
+    // Encrypt response
     const encryptedResponse = encrypt(
       JSON.stringify({ message: "Login successful", token })
     );
