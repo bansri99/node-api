@@ -7,6 +7,9 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const authenticateToken = require("./authMiddleware");
 const { encrypt, decrypt } = require("./encryption");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");  
+
 require("dotenv").config();
 
 const app = express();
@@ -20,6 +23,7 @@ app.get("/", (req, res) => {
 
 // Middleware
 app.use(express.json());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // ✅ MySQL Connection
 
@@ -173,16 +177,12 @@ app.post("/api/login", (req, res) => {
     const token = jwt.sign(
       { id: user.id, email: user.email, username: user.username },process.env.JWT_SECRET,{ expiresIn: "1h" }
     );
-      /*const payload = { id: user.id, email: user.email };
-      const token = jwt.sign(payload, JWT_SECRET);
-      const encrypted = encrypt(token);   // <-- gives you encrypted string
-      res.json({ token: encrypted });*/
 
     // Encrypt response
     const encryptedResponse = encrypt(
       JSON.stringify({ message: "Login successful", token })
     );
-      res.json({ "message": "Login successful", encrypted: encryptedResponse });
+      res.json({ "message": "Login successful", token: token, encrypted: encryptedResponse });
     });
   } catch (error) {
     console.error("Login Error:", error);

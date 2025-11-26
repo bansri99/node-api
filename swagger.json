@@ -1,0 +1,258 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "User CRUD + Auth + File Upload API",
+    "version": "1.0.0",
+    "description": "API documentation for Register, Login, CRUD, File Upload with encryption option."
+  },
+  "servers": [
+    { "url": "http://localhost:3000" },
+    { "url": "https://your-clever-cloud-url" }
+  ],
+
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+
+  "security": [{ "BearerAuth": [] }],
+
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Test API",
+        "responses": {
+          "200": { "description": "API Running" }
+        }
+      }
+    },
+
+    "/api/register": {
+      "post": {
+        "summary": "Register new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "fname": { "type": "string" },
+                      "lname": { "type": "string" },
+                      "email": { "type": "string" },
+                      "username": { "type": "string" },
+                      "password": { "type": "string" }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "encrypted": { "type": "string" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User Created" }
+        }
+      }
+    },
+
+    "/api/login": {
+      "post": {
+        "summary": "Login & get JWT token (encrypted)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "email": { "type": "string" },
+                      "password": { "type": "string" }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "encrypted": { "type": "string" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+                        "responses": {
+        "200": {
+            "description": "Login successful (returns plain JWT + encrypted response)",
+            "content": {
+            "application/json": {
+                "schema": {
+                "type": "object",
+                "properties": {
+                    "message": { 
+                    "type": "string",
+                    "example": "Login successful"
+                    },
+                    "token": { 
+                    "type": "string",
+                    "description": "Plain JWT token for Swagger / frontend",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "encrypted": { 
+                    "type": "string",
+                    "description": "Encrypted login response",
+                    "example": "jGOhk74VMaYR36fKepgUAA==:UE8XAh1/JCLJ..."
+                    }
+                }
+                }
+            }
+            }
+        }
+        }
+      }
+    },
+
+    "/api/users": {
+      "get": {
+        "summary": "Get all users with pagination & search",
+        "parameters": [
+          { "in": "query", "name": "page", "schema": { "type": "integer" } },
+          { "in": "query", "name": "limit", "schema": { "type": "integer" } },
+          { "in": "query", "name": "sortBy", "schema": { "type": "string" } },
+          { "in": "query", "name": "order", "schema": { "type": "string", "enum": ["asc", "desc"] } },
+          { "in": "query", "name": "search", "schema": { "type": "string" } }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Users fetched successfully" }
+        }
+      },
+
+      "post": {
+        "summary": "Create user (requires JWT)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "fname": { "type": "string" },
+                      "lname": { "type": "string" },
+                      "email": { "type": "string" },
+                      "username": { "type": "string" },
+                      "password": { "type": "string" }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "encrypted": { "type": "string" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "User created" } }
+      }
+    },
+
+    "/api/users/{id}": {
+      "get": {
+        "summary": "Get single user",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "User fetched" } }
+      },
+
+      "put": {
+        "summary": "Update user",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "fname": { "type": "string" },
+                      "lname": { "type": "string" },
+                      "email": { "type": "string" },
+                      "username": { "type": "string" },
+                      "password": { "type": "string" }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "encrypted": { "type": "string" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "User updated" } }
+      },
+
+      "delete": {
+        "summary": "Delete user",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "User deleted" } }
+      }
+    },
+
+    "/api/upload": {
+      "post": {
+        "summary": "Upload file (JPG/PNG/PDF)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "File uploaded successfully" }
+        }
+      }
+    }
+  }
+}
