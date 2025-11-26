@@ -1,13 +1,19 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "User CRUD + Auth + File Upload API",
-    "version": "1.0.0",
-    "description": "API documentation for Register, Login, CRUD, File Upload with encryption option."
+    "title": "My API",
+    "version": "1.0.0"
   },
+
   "servers": [
-    { "url": "http://localhost:3000" },
-    { "url": "https://your-clever-cloud-url" }
+    {
+      "url": "http://localhost:3000",
+      "description": "Localhost (Full CRUD)"
+    },
+    {
+      "url": "https://your-app.cleverapps.io",
+      "description": "Clever Cloud (Register/Login)"
+    }
   ],
 
   "components": {
