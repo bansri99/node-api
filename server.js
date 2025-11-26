@@ -9,6 +9,7 @@ const authenticateToken = require("./authMiddleware");
 const { encrypt, decrypt } = require("./encryption");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");  
+const cors = require("cors");
 
 require("dotenv").config();
 
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 // Middleware
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(cors());
 
 // ✅ MySQL Connection
 
